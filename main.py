@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(80), nullable=False, unique=True)
     email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
+    memories = relationship("Memory", back_populates="user")
 
 
 class Memory(db.Model):
@@ -32,7 +33,8 @@ class Memory(db.Model):
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(2555), nullable=False)
     img_url = db.Column(db.String(255), nullable=False)
-    user = db.Column(db.String(40), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = relationship("User", back_populates="memories")
 
     def __repr__(self):
         return '<Memory %r>' % self.title
@@ -84,7 +86,11 @@ def home():
 @app.route("/show")
 @login_required
 def show():
-    memories = Memory.query.filter_by(user=current_user.name).all()
+    
+    try: 
+        memories = Memory.query.filter_by(user_id=current_user.id).all()
+    except sqlalchemy.exc.ArgumentError:
+        memories = []
     return render_template("show.html", memories=memories, logged_in=current_user.is_authenticated)
 
 @app.route("/add", methods=["POST", "GET"])
@@ -96,7 +102,7 @@ def add():
             title = add_form.title.data,
             description = add_form.description.data,
             img_url = add_form.img_url.data,
-            user = current_user.name
+            user_id = current_user.id
         )
         db.session.add(memory)
         db.session.commit()
