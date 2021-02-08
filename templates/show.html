@@ -1,0 +1,40 @@
+{% extends 'bootstrap/base.html' %}
+{% include "header.html" %}
+
+{% block content %}
+    <h1>Your Bons</h1>
+
+    <a href="{{url_for('add')}}" class="btn btn-primary">Add</a>
+    <a href="{{url_for('home')}}"  class="btn btn-light">Home</a>
+
+
+
+
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      {% for memory in memories: %}
+      <div class="col">
+        <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <img src="{{memory.img_url}}" alt="Avatar" style="width:300px;height:300px;">
+              </div>
+              <div class="flip-card-back">
+                
+              <h5 class="card-title">{{memory.title}}</h5>
+              <p class="card-text">{{memory.description}}</p>
+              <a href="{{url_for('delete', id=memory.id)}}" class="btn btn-danger">Delete</a>
+              <a href="{{url_for('edit', id=memory.id)}}" class="btn btn-warning">Edit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+   
+</div>
+
+{% endblock %}
+
+
+{% include "footer.html" %}
