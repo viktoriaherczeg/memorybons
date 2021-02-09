@@ -2,9 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -43,31 +41,6 @@ class Memory(db.Model):
 db.create_all()
 
 
-# Forms
-
-class NewMemoryForm(FlaskForm):
-    title = StringField(label="Memory Name", validators=[DataRequired()])
-    description = StringField(label="Describe your Memory", validators=[DataRequired()])
-    img_url = StringField(label="Image link that captures the essence", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-class EditForm(FlaskForm):
-    description = StringField(label="Describe your Memory", validators=[DataRequired()])
-    img_url = StringField(label="Image link that captures the essence", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class RegisterForm(FlaskForm):
-    name = StringField(label="Username", validators=[DataRequired()])
-    email = StringField(label="Email", validators=[DataRequired()])
-    password = PasswordField(label="Password", validators=[DataRequired()])
-    submit = SubmitField("Register")
-
-
-class LoginForm(FlaskForm):
-    email = StringField(label="Email", validators=[DataRequired()])
-    password = PasswordField(label="Password", validators=[DataRequired()])
-    submit = SubmitField("Login")
 
 #security
 
