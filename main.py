@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.jinja_env.auto_reload = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memories.db'
 db = SQLAlchemy(app)
@@ -89,6 +91,8 @@ def add():
 def edit(id):
     memory = Memory.query.filter_by(id=id).first()
     form = EditForm()
+    form.description = memory.description
+    form.img_url = memory.img_url
     if request.method == "POST" and form.validate_on_submit():
         memory.description = form.description.data
         memory.img_url = form.img_url.data
@@ -150,4 +154,5 @@ def logout():
 
 
 if __name__ == "__main__":
+    
     app.run(debug=True)

@@ -1,26 +1,21 @@
-{% extends 'bootstrap/base.html' %}
-{% include "header.html" %}
 
-{% block styles %}
-{{ super() }}
+{% extends "header.html" %}
 
-<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/index_style.css')}}">
-
-{% endblock %}
 
 {% block content %}
   
-    <div class="container">
+    <div class="container d-flex flex-column align-items-center justify-content-center vh-100" id="index-container">
       
-          <h1>Memory-Bons</h1>
-          <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-          <p class="lead">
-            <a href="{{url_for('show')}}" class="btn btn-lg btn-secondary fw-bold border-white bg-dark">Show Bons</a>
+          <h1 class="text-center py-3">Memory-Bons</h1>
+          <p class="lead text-center px-5">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+          <p class="lead text-center py-3">
+            <a href="{{url_for('show')}}" class="btn btn-lg btn-secondary fw-bold bg-dark">Show Bons</a>
           </p>
         
     </div>
         
 
-    {% include "footer.html" %}
+    
 {% endblock %}
 
+{% include "footer.html" %}
