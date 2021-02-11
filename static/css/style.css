@@ -1,16 +1,9 @@
 body {
     font-family: 'Raleway', sans-serif;
-    color: rgb(2, 53, 53);
-    background-color: plum;
+    color: #493323;
+    background-color: #eaac7f;
     
     margin-right: 7% ;
     margin-left: 7% ;
 }
 
-
-#index-container {
-    justify-content: center;
-    text-align: center;
-    margin: auto;
-    background-color: floralwhite;
-}

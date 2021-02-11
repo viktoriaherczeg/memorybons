@@ -1,13 +1,16 @@
 
 {% extends "header.html" %}
-
+{% block link %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
+  {{ super() }}
+{% endblock %}
 
 {% block content %}
   
     <div class="container d-flex flex-column align-items-center justify-content-center vh-100" id="index-container">
       
           <h1 class="text-center py-3">Memory-Bons</h1>
-          <p class="lead text-center px-5">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+          <p class="lead text-center px-5">A place to create a stash of good vibes from the past, so when things get gloomy, you can take a quick pick-me-up to feel a bit better.</p>
           <p class="lead text-center py-3">
             <a href="{{url_for('show')}}" class="btn btn-lg btn-secondary fw-bold bg-dark">Show Bons</a>
           </p>

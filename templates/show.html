@@ -1,10 +1,17 @@
 
 {% extends "header.html" %}
 
-{% block content %}
-  <div class="container text-center my-4 py-5">  
-  <h1 class="heading py-4">Your Bons</h1>
+{% block link %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cards_style.css') }}">
+  {{ super() }}
+{% endblock %}
 
+
+
+{% block content %}
+  <div class="container  text-center my-4 py-5" id="show-header">  
+  <h1 class="heading py-4">Your Bons</h1>
+    <p>Just take one if you're feel like it, and let it take you to a time-traveling bliss.</p>
     <a href="{{url_for('add')}}" class="btn btn-light">Add New Memory</a>
   </div>
 
