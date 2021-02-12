@@ -1,8 +1,8 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
-from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm
+from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm, ChangePassword
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -116,6 +116,9 @@ def delete(id):
 def register():
     form = RegisterForm()
     if request.method == "POST" and form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            flash("You are already registered with that email. Please log in.")
+            return redirect(url_for("login"))
         user = User(
             name = form.name.data,
             email = form.email.data,
@@ -139,9 +142,11 @@ def login():
                 return redirect(url_for("show"))
             else:
                 #flash incorrect pw
+                flash("Incorrect password")
                 return redirect(url_for("login"))
         else:
             #flash message: no registration with that email
+            flash("You are not registered with that email. Please create an account.")
             return redirect(url_for("register"))
     return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
 
@@ -150,6 +155,21 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home", logged_in=False))
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    form = ChangePassword()
+    if request.method == "POST" and form.validate_on_submit():
+        user = User.query.filter_by(id=current_user.id).first()
+        if check_password_hash(user.password, form.old_password.data) and form.new_password.data == form.repeat_password.data:
+            user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
+            db.session.add(user)
+            db.session.commit()
+            #flash successful message
+            flash("Password changed successfully.")
+            return redirect(url_for("profile"))
+    return render_template("userprofile.html", form=form, logged_in=current_user.is_authenticated)
 
 
 

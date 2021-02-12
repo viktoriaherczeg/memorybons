@@ -28,3 +28,10 @@ class LoginForm(FlaskForm):
     email = StringField(label="Email", validators=[DataRequired()])
     password = PasswordField(label="Password", validators=[DataRequired()])
     submit = SubmitField("Login")
+
+
+class ChangePassword(FlaskForm):
+    old_password = PasswordField(label="Old Password", validators=[DataRequired()])
+    new_password = PasswordField(label="New Password", validators=[DataRequired()])
+    repeat_password = PasswordField(label="Repeat Password", validators=[DataRequired()])
+    submit = SubmitField("Submit")

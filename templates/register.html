@@ -8,6 +8,16 @@
   <div class="w-50 vh-100 container  my-5">
     <div class="d-flex flex-column justify-content-startmx-auto">
       <h1>Register</h1>
+      {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+      {% endif %}
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          {% for message in messages %}
+          <p class="text-danger">{{ message }}</p>
+          {% endfor %}
+      {% endif %}
+      {% endwith %}
       
         {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "dark my-2 d-grid"}) }}
     
