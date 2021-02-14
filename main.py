@@ -5,7 +5,10 @@ from sqlalchemy.orm import relationship
 from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm, ChangePassword
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
+from cloudinary.utils import cloudinary_url
+from cloudinary.uploader import upload as cloudinary_upload
+from cloudinary import config as cloudinary_config
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -14,6 +17,10 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memories.db'
 db = SQLAlchemy(app)
+
+cloudinary_config(cloud_name="dijrty8zh",
+                     api_key="579177932436579",
+                     api_secret="OwkzkS0r4DVN0Z68ahAfWDhar94")
 
 
 # DB stuff
@@ -31,7 +38,7 @@ class Memory(db.Model):
     __tablename__ = "memories"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(2555), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
     img_url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = relationship("User", back_populates="memories")
@@ -58,6 +65,7 @@ def load_user(user_id):
 def home():
     return render_template("index.html", logged_in=current_user.is_authenticated)
 
+
 @app.route("/show")
 @login_required
 def show():
@@ -68,15 +76,20 @@ def show():
         memories = []
     return render_template("show.html", memories=memories, logged_in=current_user.is_authenticated)
 
+
 @app.route("/add", methods=["POST", "GET"])
 @login_required
 def add():
     add_form = NewMemoryForm()
     if request.method == "POST" and add_form.validate_on_submit():
+        img = add_form.img.data
+        uploaded_img = cloudinary_upload(img)
+        img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
+        
         memory = Memory(
             title = add_form.title.data,
             description = add_form.description.data,
-            img_url = add_form.img_url.data,
+            img_url = img_url,
             user_id = current_user.id
         )
         db.session.add(memory)
@@ -91,11 +104,14 @@ def add():
 def edit(id):
     memory = Memory.query.filter_by(id=id).first()
     form = EditForm()
-    form.description = memory.description
-    form.img_url = memory.img_url
+    
     if request.method == "POST" and form.validate_on_submit():
+        img = form.img.data
+        uploaded_img = cloudinary_upload(img)
+        img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
+        
         memory.description = form.description.data
-        memory.img_url = form.img_url.data
+        memory.img_url = img_url
         db.session.add(memory)
         db.session.commit()
         return redirect(url_for("show"))

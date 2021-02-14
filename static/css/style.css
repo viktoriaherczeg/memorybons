@@ -3,8 +3,14 @@ body {
     color: #493323;
     background-color: #eaac7f;
     
-    margin-right: 7% ;
-    margin-left: 7% ;
+    margin-right: 0 ;
+    margin-left: 0 ;
     align-content: center;
 }
 
+.navbar {
+    margin-right: 7% ;
+    margin-left: 7% ;
+    background-color: #493323;
+    color: #ffdf91;
+}

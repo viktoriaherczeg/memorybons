@@ -9,20 +9,20 @@
 
 
 {% block content %}
-  <div class="container  text-center min-vw-100 mb-4 mx-0 py-5" id="show-header">  
+  <div class="container position-sticky  text-center min-vw-100 mb-4 mx-0 py-5" id="show-header">  
   <h1 class="heading py-4">Your Bons</h1>
     <p>Just take one if you're feel like it, and let it take you to a time-traveling bliss.</p>
     <a href="{{url_for('add')}}" class="btn btn-light">Add New Memory</a>
   </div>
 
     <div class="container py-3 my-4">
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="d-flex flex-row flex-wrap align-items-center justify-content-center ">
       {% for memory in memories: %}
-      <div class="col">
-        <div class="flip-card">
+      <div class="">
+        <div class="flip-card m-2 ">
             <div class="flip-card-inner">
               <div class="flip-card-front">
-                <img src="{{memory.img_url}}" alt="Avatar" style="width:300px;height:300px;">
+                <img src="{{memory.img_url}}" alt="Avatar" class=" card-img-top">
               </div>
               <div class="flip-card-back">
                 

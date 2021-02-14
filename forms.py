@@ -1,19 +1,21 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, PasswordField, TextAreaField
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms.validators import DataRequired, Length
+
 
 # Forms
 
 class NewMemoryForm(FlaskForm):
     title = StringField(label="Memory Name", validators=[DataRequired()])
-    description = StringField(label="Describe your Memory", validators=[DataRequired()])
-    img_url = StringField(label="Image link that captures the essence", validators=[DataRequired()])
+    description = TextAreaField(label="Describe your Memory", validators=[DataRequired(), Length(max=255)])
+    img = FileField(label="Image link that captures the essence", validators=[FileRequired()])
     submit = SubmitField("Submit")
 
 
 class EditForm(FlaskForm):
-    description = StringField(label="Describe your Memory", validators=[DataRequired()])
-    img_url = StringField(label="Image link that captures the essence", validators=[DataRequired()])
+    description = TextAreaField(label="Describe your Memory", validators=[DataRequired()])
+    img = FileField(label="Image link that captures the essence", validators=[FileRequired()])
     submit = SubmitField("Submit")
 
 
