@@ -14,8 +14,8 @@ class NewMemoryForm(FlaskForm):
 
 
 class EditForm(FlaskForm):
-    description = TextAreaField(label="Describe your Memory", validators=[DataRequired()])
-    img = FileField(label="Image link that captures the essence", validators=[FileRequired()])
+    description = TextAreaField(label="Describe your Memory", validators=[DataRequired(), Length(max=255)])
+    img = FileField(label="Image link that captures the essence")
     submit = SubmitField("Submit")
 
 

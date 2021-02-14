@@ -65,6 +65,7 @@ def load_user(user_id):
 def home():
     return render_template("index.html", logged_in=current_user.is_authenticated)
 
+#Memory related routes
 
 @app.route("/show")
 @login_required
@@ -103,15 +104,17 @@ def add():
 @login_required
 def edit(id):
     memory = Memory.query.filter_by(id=id).first()
-    form = EditForm()
+    form = EditForm(description=memory.description)
     
     if request.method == "POST" and form.validate_on_submit():
-        img = form.img.data
-        uploaded_img = cloudinary_upload(img)
-        img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
+        if form.img.data:
+            img = form.img.data
+            uploaded_img = cloudinary_upload(img)
+            img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
+            memory.img_url = img_url
         
         memory.description = form.description.data
-        memory.img_url = img_url
+        
         db.session.add(memory)
         db.session.commit()
         return redirect(url_for("show"))
@@ -127,6 +130,8 @@ def delete(id):
     db.session.commit()
     return redirect(url_for("show"), logged_in=current_user.is_authenticated)
 
+
+#User related routes
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
