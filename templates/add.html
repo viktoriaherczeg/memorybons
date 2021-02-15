@@ -1,0 +1,23 @@
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "header.html" %}
+
+
+
+{% block content %}
+
+
+  <div class="w-50 vh-100 container  my-5">
+    <div class="d-flex flex-column justify-content-startmx-auto">
+      <h1>Add a Memory</h1>
+      
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "dark my-2"}) }}
+    
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% include "footer.html" %}

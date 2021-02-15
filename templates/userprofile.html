@@ -1,0 +1,43 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "header.html" %}
+
+{% block link %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cards_style.css') }}">
+  {{ super() }}
+{% endblock %}
+
+
+
+{% block content %}
+  <div class="container  text-center min-vw-100 mb-4 mx-0 py-5 bg-light" id="profile-heading">  
+  <h1 class="heading py-4">Your Profile</h1>
+    
+  </div>
+  
+  <div class="w-50 vh-100 container my-5">
+    <div class="d-flex flex-column justify-content-startmx-auto">
+      <h1>Change Password</h1>
+      
+      {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <p class="text-success">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "dark my-2"}) }}
+    
+    </div>
+  </div>
+
+
+
+  {% endblock %}
+
+
+{% include "footer.html" %}
