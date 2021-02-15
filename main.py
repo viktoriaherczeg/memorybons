@@ -6,6 +6,7 @@ from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm, ChangePasswo
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from dotenv import load_dotenv
 #cloudinary imports
 from cloudinary.utils import cloudinary_url
 from cloudinary.uploader import upload as cloudinary_upload
@@ -19,9 +20,11 @@ Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memories.db'
 db = SQLAlchemy(app)
 
-cloudinary_config(cloud_name="dijrty8zh",
-                     api_key="579177932436579",
-                     api_secret="OwkzkS0r4DVN0Z68ahAfWDhar94")
+
+load_dotenv()
+cloudinary_config(cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+                     api_key=os.getenv("CLOUDINARY_API_KEY"),
+                     api_secret=os.getenv("CLOUDINARY_API_SECRET"))
 
 
 # DB stuff
