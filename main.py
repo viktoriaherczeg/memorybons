@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 Bootstrap(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL",  "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL",  "sqlite:///memories.db")
 db = SQLAlchemy(app)
 
 
