@@ -1,2 +1,2 @@
-# memorybons
-A simple Flask application to store memories.
+# memory-bons
+A simple web app with Flask to store memories
