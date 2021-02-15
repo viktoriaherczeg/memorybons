@@ -6,6 +6,7 @@ from forms import NewMemoryForm, EditForm, LoginForm, RegisterForm, ChangePasswo
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+#cloudinary imports
 from cloudinary.utils import cloudinary_url
 from cloudinary.uploader import upload as cloudinary_upload
 from cloudinary import config as cloudinary_config
@@ -61,16 +62,19 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+#Routes
+
 @app.route("/")
 def home():
     return render_template("index.html", logged_in=current_user.is_authenticated)
 
+
 #Memory related routes
+#Showing memories
 
 @app.route("/show")
 @login_required
 def show():
-    
     try: 
         memories = Memory.query.filter_by(user_id=current_user.id).all()
     except sqlalchemy.exc.ArgumentError:
@@ -78,15 +82,18 @@ def show():
     return render_template("show.html", memories=memories, logged_in=current_user.is_authenticated)
 
 
+#Adding memories
+
 @app.route("/add", methods=["POST", "GET"])
 @login_required
 def add():
     add_form = NewMemoryForm()
     if request.method == "POST" and add_form.validate_on_submit():
+        #Uploading image to Cloudinary
         img = add_form.img.data
         uploaded_img = cloudinary_upload(img)
         img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
-        
+        #Creating memory in database
         memory = Memory(
             title = add_form.title.data,
             description = add_form.description.data,
@@ -95,32 +102,36 @@ def add():
         )
         db.session.add(memory)
         db.session.commit()
-
         return redirect(url_for("show"))
 
     return render_template("add.html", form=add_form, logged_in=current_user.is_authenticated)
 
+
+#Editing memories
+
 @app.route("/edit/<id>", methods=["POST", "GET"])
 @login_required
 def edit(id):
+    #Getting memory data from database and prepopulating edit form
     memory = Memory.query.filter_by(id=id).first()
     form = EditForm(description=memory.description)
-    
     if request.method == "POST" and form.validate_on_submit():
+        #Uploading new image to cloudinary if exists and adding it to db
         if form.img.data:
             img = form.img.data
             uploaded_img = cloudinary_upload(img)
             img_url, options = cloudinary_url(uploaded_img['public_id'], format="jpg", width="300", height="300")
             memory.img_url = img_url
-        
-        memory.description = form.description.data
-        
+        #Modifying memory in db
+        memory.description = form.description.data        
         db.session.add(memory)
         db.session.commit()
         return redirect(url_for("show"))
 
     return render_template("edit.html", memory=memory, form=form, logged_in=current_user.is_authenticated)
 
+
+#Deleting memories
 
 @app.route("/delete/<id>")
 @login_required
@@ -132,6 +143,7 @@ def delete(id):
 
 
 #User related routes
+#Registerig new users
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -152,6 +164,7 @@ def register():
     return render_template("register.html", form=form, logged_in=current_user.is_authenticated)
 
 
+#Login user
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -172,11 +185,14 @@ def login():
     return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
 
 
+#Logout user
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for("home", logged_in=False))
 
+
+#Show user profile, modify password
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
@@ -195,5 +211,4 @@ def profile():
 
 
 if __name__ == "__main__":
-    
     app.run(debug=True)

@@ -14,3 +14,9 @@ body {
     background-color: #493323;
     color: #ffdf91;
 }
+
+#profile-heading {
+    background-image: url("https://images.unsplash.com/photo-1603894143428-3086b6a4dbcb?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=891&q=80");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
